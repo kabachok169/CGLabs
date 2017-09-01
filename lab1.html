@@ -1,0 +1,22 @@
+<html>
+	<body>
+		<canvas id='lab1' width='100' height='100'>
+			<script>
+				var canvas = document.getElementById('lab1');
+				var ctx = canvas.getContext('2d');
+				var arr0 = new Array(10);
+				for(i=0; i<10; ++i)
+				{
+					arr0[i] = 1;
+				}
+				ctx.fillStyle='#00aa00';
+				ctx.fillRect(10, 10, 70, 70);
+				ctx.fillStyle='#aaaaaa';
+				for(i=0; i<10; ++i)
+				{
+					ctx.fillRect(2*i, 2*i, 3, 3)
+				}
+			</script>
+		</canvas>
+	</body>
+</html>
