@@ -1,32 +1,122 @@
 <html>
-	<body>
-		<canvas id='lab1' width='100' height='100'>
-			<script>
-				var x0 = 0;
-				var y0 = 0; 
-				var x1 = 0;
-				var y1 = 0; 
-				var canvas = document.getElementById('lab1');
-				var ctx = canvas.getContext('2d');
+<body>
+<canvas id='lab1' width='50' height='50'></canvas>
 
-				function onClick(event){
-					ctx.fillRect(event.offsetX, event.offsetY, 1, 1)
-				}
 
-				
-				
-				// var arr0 = new Array(10);
-				// for(i=0; i<10; ++i){
-				// 	arr0[i] = 1;
-				// }
-				// ctx.fillStyle='#00aa00';
-				// ctx.fillRect(10, 10, 70, 70);
-				// ctx.fillStyle='#aaaaaa';
-				// for(i=0; i<10; ++i){
-				// 	ctx.fillRect(2*i, 2*i, 3, 3)
-				// }
-				canvas.addEventListener('click', onClick);
-			</script>
-		</canvas>
-	</body>
+    <table>
+        <tr>
+            <td>Text to Save:</td>
+        </tr>
+        <tr>
+            <td colspan="3">
+                <textarea id="inputTextToSave" style="width:512px;height:256px"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>Filename to Save As:</td>
+            <td><input id="inputFileNameToSaveAs"></input></td>
+            <td>
+                <button onclick="saveTextAsFile()">Save Text to File</button>
+            </td>
+        </tr>
+        <tr>
+            <td>Select a File to Load:</td>
+            <td><input type="file" id="fileToLoad"></td>
+            <td>
+                <button onclick="loadFileAsText()">Load Selected File</button>
+            <td>
+        </tr>
+    </table>
+
+    <script type='text/javascript'>
+
+        var canvas = document.getElementById("lab1");
+        var ctx = canvas.getContext('2d');
+
+        function saveTextAsFile() {
+
+            var textToWrite = '';
+            ctx.fillRect(0,0,1,1);
+            var matrix = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+//            for(var i=0; i<matrix.length; i++)
+//                console.log(matrix[i]);
+            for(var i=3; i<matrix.length; i+=4){
+                if(matrix[i]) textToWrite += '1';
+                else textToWrite += '0';
+            }
+            var textFileAsBlob = new Blob([textToWrite], {type: 'text/plain'});
+            var fileNameToSaveAs = "123";// document.getElementById("inputFileNameToSaveAs").value;
+
+            var downloadLink = document.createElement("a");
+            downloadLink.download = fileNameToSaveAs;
+            downloadLink.innerHTML = "Download File";
+            if (window.webkitURL != null) {
+                downloadLink.href = window.webkitURL.createObjectURL(textFileAsBlob);
+            }
+            else {
+
+                downloadLink.href = window.URL.createObjectURL(textFileAsBlob);
+                downloadLink.onclick = destroyClickedElement;
+                downloadLink.style.display = "none";
+                document.body.appendChild(downloadLink);
+            }
+
+            downloadLink.click();
+        }
+
+        function destroyClickedElement(event) {
+            document.body.removeChild(event.target);
+        }
+
+        function loadFileAsText() {
+            var fileToLoad = document.getElementById("fileToLoad").files[0];
+
+            var fileReader = new FileReader();
+            fileReader.onload = function (fileLoadedEvent) {
+                var textFromFileLoaded = fileLoadedEvent.target.result;
+                for(var i = 0; i < textFromFileLoaded.length; ++i){
+                    if(textFromFileLoaded[i]!='0')
+//                        ctx.clearRect(0, 0, canvas.width,canvas.height);
+                        ctx.fillRect(i%canvas.width, i/canvas.width, 1,1);
+                }
+            };
+            fileReader.readAsText(fileToLoad, "UTF-8");
+        }
+
+    </script>
+
+
+    <script>
+
+        var canvas = document.getElementById('lab1');
+        var ctx = canvas.getContext('2d');
+//        ctx.strokeStyle =
+
+        //				function onClick(event){
+        //					ctx.fillRect(event.offsetX, event.offsetY, 1, 1)
+        //				}
+
+        function MDown(event) {
+            canvas.addEventListener('mousemove', MMove);
+        }
+
+        function MUp(event) {
+            canvas.removeEventListener('mousemove', MMove);
+        }
+
+        function MMove(event) {
+
+            ctx.lineTo(event.offsetX, event.offsetY, 1, 1)
+            ctx.stroke();
+        }
+
+        canvas.addEventListener('mousedown', MDown);
+        canvas.addEventListener('mouseup', MUp);
+
+        //				canvas.addEventListener('click', onClick);
+
+    </script>
+
+</body>
 </html>
