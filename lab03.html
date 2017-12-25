@@ -1,0 +1,68 @@
+<html>
+<body>
+
+    <table>
+        <tr>
+            <td>
+                <canvas id='border' height='500' width='1000' style="border:1px solid"> </canvas>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <canvas id='lab03' height='500' width='1000' style="border:1px solid"> </canvas>
+            </td>
+        </tr>
+    </table>
+
+    <script>
+
+    var canvas = document.getElementById('lab03');
+    var ctx = canvas.getContext('2d');
+    var canvasbord = document.getElementById('border');
+    var ctxb = canvasbord.getContext('2d');
+
+
+
+    var img = new Image();
+
+    img.src = 'https://upload.wikimedia.org/wikipedia/commons/f/f0/Valve_original_%281%29.PNG';
+    img.crossOrigin='';
+    img.onload = function(){
+      ctx.drawImage(img, 0, 0);
+    }
+
+
+    canvas.addEventListener('click', Sobel);
+
+    function Sobel() {
+      
+      let getimg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      var data = getimg.data;
+      let cw = canvas.width;
+      let ch = canvas.height;
+      var newimage = ctxb.getImageData(0, 0, canvas.width, canvas.height);
+      
+      for (i = 1; i < ch - 1; i++)
+        for (j = 1; j < cw - 1; j++){
+          let m1 = data[((i-1)*cw + j - 1)*4];
+          let m2 = data[((i-1)*cw + j)*4];
+          let m3 = data[((i-1)*cw + j + 1)*4];
+          let m4 = data[(i*cw + j - 1)*4];
+          let m5 = data[(i*cw + j)*4];
+          let m6 = data[(i*cw + j + 1)*4];
+          let m7 = data[((i+1)*cw + j - 1)*4];
+          let m8 = data[((i+1)*cw + j)*4];
+          let m9 = data[((i+1)*cw + j + 1)*4];
+
+          let Gx = (m7 + 2*m8 + m9) - (m1 + 2*m2 + m3);
+          let Gy = (m3 + 2*m6 + m9) - (m1 + 2*m4 + m7);
+          G = Math.sqrt(Gx*Gx + Gy*Gy);
+          newimage.data[(i * cw + j) * 4 + 3] = G;
+             
+        }
+      ctxb.putImageData(newimage, 0, 0);
+    }
+
+    </script>
+</body>
+</html>
