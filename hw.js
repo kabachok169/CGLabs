@@ -12,7 +12,7 @@ var mouse = {
 
 let maxRadius = 100;
 let countOfCircles = 120;
-let colorArray = ["#95C893", "#FECEA8", "#FF837C", "#E84A5F"];
+let colorArray = ["#95C893", "#FECEA8", "#FF837C", "#E84A5F", "#00FA9A", "#40E0D0"];
 
 window.addEventListener("mousemove", function (event) {
     mouse.x = event.x;
@@ -23,7 +23,6 @@ window.addEventListener("mousemove", function (event) {
 window.addEventListener("resize", function () {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-
     init();
 });
 
@@ -47,13 +46,32 @@ function Circle(x, y, dx, dy, radius) {
         c.fill();
     };
 
+    // function Line(x, y, dx, dy) {
+    // var flag = 1;
+    // this.x = x;
+    // this.y = y;
+    // this.dx = dx;
+    // this.dy = dy;
+
+    // this.colorArray = colorArray[Math.floor(Math.random() * colorArray.length)];
+
+    // this.draw = function () {
+    //     c.beginPath();
+    //     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+
+    //     //If you want epileptic effect
+    //     // c.fillStyle = colorArray[Math.floor(Math.random() * colorArray.length)];
+    //     c.fillStyle = this.colorArray;
+    //     c.fill();
+    // };
+
     this.update = function () {
         if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
             this.dx = -this.dx;
         }
 
         if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
-            this.dy = - this.dy;
+            this.dy = -this.dy;
         }
 
         this.x += this.dx;
@@ -67,19 +85,19 @@ function Circle(x, y, dx, dy, radius) {
         //     && mouse.y - this.y < 50
         //     && mouse.y - this.y > -50) {
 
-        if (this.radius < maxRadius && flag == 1) {
+        if (this.radius < maxRadius && flag === 1) {
             this.radius += 1;
         }
 
-        if (this.radius == maxRadius) {
+        if (this.radius >= maxRadius) {
             flag = 0;
         }
      
-        if (this.radius > this.minRadius && flag == 0) {
+        if (this.radius > this.minRadius && flag === 0) {
             this.radius -= 1;
         }
 
-        if (this.radius == this.minRadius) {
+        if (this.radius <= this.minRadius) {
             flag = 1;
         }
 
@@ -93,6 +111,7 @@ let circleArray = [];
 
 function init() {
     circleArray = [];
+    lineArray = [];
 
     for (let i = 0; i < countOfCircles; i++) {
         //let radius = 30;
@@ -102,7 +121,14 @@ function init() {
         let dx = (Math.random() - 0.5);
         let dy = (Math.random() - 0.5);
 
+
         circleArray.push(new Circle(x, y, dx, dy, radius));
+
+        // let x = Math.random() * (innerWidth - radius * 2) + radius;
+        // let y = Math.random() * (innerHeight - radius * 2) + radius;
+        // let dx = (Math.random() - 0.5);
+        // let dy = (Math.random() - 0.5);
+        // lineArray.push(new Line(x, y, dx, dy));
     }
 }
 
